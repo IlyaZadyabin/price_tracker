@@ -17,7 +17,11 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$HomeState {
   HomeStateStatus get status => throw _privateConstructorUsedError;
-  String get id => throw _privateConstructorUsedError;
+  List<Market> get markets => throw _privateConstructorUsedError;
+  Market? get selectedMarket => throw _privateConstructorUsedError;
+  ActiveSymbol? get selectedAsset => throw _privateConstructorUsedError;
+  String? get price => throw _privateConstructorUsedError;
+  bool? get isPriceUp => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeStateCopyWith<HomeState> get copyWith =>
@@ -28,7 +32,16 @@ mixin _$HomeState {
 abstract class $HomeStateCopyWith<$Res> {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
       _$HomeStateCopyWithImpl<$Res>;
-  $Res call({HomeStateStatus status, String id});
+  $Res call(
+      {HomeStateStatus status,
+      List<Market> markets,
+      Market? selectedMarket,
+      ActiveSymbol? selectedAsset,
+      String? price,
+      bool? isPriceUp});
+
+  $MarketCopyWith<$Res>? get selectedMarket;
+  $ActiveSymbolCopyWith<$Res>? get selectedAsset;
 }
 
 /// @nodoc
@@ -42,18 +55,60 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
   @override
   $Res call({
     Object? status = freezed,
-    Object? id = freezed,
+    Object? markets = freezed,
+    Object? selectedMarket = freezed,
+    Object? selectedAsset = freezed,
+    Object? price = freezed,
+    Object? isPriceUp = freezed,
   }) {
     return _then(_value.copyWith(
       status: status == freezed
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as HomeStateStatus,
-      id: id == freezed
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
+      markets: markets == freezed
+          ? _value.markets
+          : markets // ignore: cast_nullable_to_non_nullable
+              as List<Market>,
+      selectedMarket: selectedMarket == freezed
+          ? _value.selectedMarket
+          : selectedMarket // ignore: cast_nullable_to_non_nullable
+              as Market?,
+      selectedAsset: selectedAsset == freezed
+          ? _value.selectedAsset
+          : selectedAsset // ignore: cast_nullable_to_non_nullable
+              as ActiveSymbol?,
+      price: price == freezed
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isPriceUp: isPriceUp == freezed
+          ? _value.isPriceUp
+          : isPriceUp // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
+  }
+
+  @override
+  $MarketCopyWith<$Res>? get selectedMarket {
+    if (_value.selectedMarket == null) {
+      return null;
+    }
+
+    return $MarketCopyWith<$Res>(_value.selectedMarket!, (value) {
+      return _then(_value.copyWith(selectedMarket: value));
+    });
+  }
+
+  @override
+  $ActiveSymbolCopyWith<$Res>? get selectedAsset {
+    if (_value.selectedAsset == null) {
+      return null;
+    }
+
+    return $ActiveSymbolCopyWith<$Res>(_value.selectedAsset!, (value) {
+      return _then(_value.copyWith(selectedAsset: value));
+    });
   }
 }
 
@@ -63,7 +118,18 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
           _$_HomeState value, $Res Function(_$_HomeState) then) =
       __$$_HomeStateCopyWithImpl<$Res>;
   @override
-  $Res call({HomeStateStatus status, String id});
+  $Res call(
+      {HomeStateStatus status,
+      List<Market> markets,
+      Market? selectedMarket,
+      ActiveSymbol? selectedAsset,
+      String? price,
+      bool? isPriceUp});
+
+  @override
+  $MarketCopyWith<$Res>? get selectedMarket;
+  @override
+  $ActiveSymbolCopyWith<$Res>? get selectedAsset;
 }
 
 /// @nodoc
@@ -79,17 +145,37 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? status = freezed,
-    Object? id = freezed,
+    Object? markets = freezed,
+    Object? selectedMarket = freezed,
+    Object? selectedAsset = freezed,
+    Object? price = freezed,
+    Object? isPriceUp = freezed,
   }) {
     return _then(_$_HomeState(
       status: status == freezed
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as HomeStateStatus,
-      id: id == freezed
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
+      markets: markets == freezed
+          ? _value._markets
+          : markets // ignore: cast_nullable_to_non_nullable
+              as List<Market>,
+      selectedMarket: selectedMarket == freezed
+          ? _value.selectedMarket
+          : selectedMarket // ignore: cast_nullable_to_non_nullable
+              as Market?,
+      selectedAsset: selectedAsset == freezed
+          ? _value.selectedAsset
+          : selectedAsset // ignore: cast_nullable_to_non_nullable
+              as ActiveSymbol?,
+      price: price == freezed
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isPriceUp: isPriceUp == freezed
+          ? _value.isPriceUp
+          : isPriceUp // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -97,18 +183,38 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_HomeState implements _HomeState {
-  const _$_HomeState({this.status = HomeStateStatus.initial, this.id = ''});
+  const _$_HomeState(
+      {this.status = HomeStateStatus.initialLoading,
+      final List<Market> markets = const [],
+      this.selectedMarket,
+      this.selectedAsset,
+      this.price,
+      this.isPriceUp})
+      : _markets = markets;
 
   @override
   @JsonKey()
   final HomeStateStatus status;
+  final List<Market> _markets;
   @override
   @JsonKey()
-  final String id;
+  List<Market> get markets {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_markets);
+  }
+
+  @override
+  final Market? selectedMarket;
+  @override
+  final ActiveSymbol? selectedAsset;
+  @override
+  final String? price;
+  @override
+  final bool? isPriceUp;
 
   @override
   String toString() {
-    return 'HomeState(status: $status, id: $id)';
+    return 'HomeState(status: $status, markets: $markets, selectedMarket: $selectedMarket, selectedAsset: $selectedAsset, price: $price, isPriceUp: $isPriceUp)';
   }
 
   @override
@@ -117,14 +223,24 @@ class _$_HomeState implements _HomeState {
         (other.runtimeType == runtimeType &&
             other is _$_HomeState &&
             const DeepCollectionEquality().equals(other.status, status) &&
-            const DeepCollectionEquality().equals(other.id, id));
+            const DeepCollectionEquality().equals(other._markets, _markets) &&
+            const DeepCollectionEquality()
+                .equals(other.selectedMarket, selectedMarket) &&
+            const DeepCollectionEquality()
+                .equals(other.selectedAsset, selectedAsset) &&
+            const DeepCollectionEquality().equals(other.price, price) &&
+            const DeepCollectionEquality().equals(other.isPriceUp, isPriceUp));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(status),
-      const DeepCollectionEquality().hash(id));
+      const DeepCollectionEquality().hash(_markets),
+      const DeepCollectionEquality().hash(selectedMarket),
+      const DeepCollectionEquality().hash(selectedAsset),
+      const DeepCollectionEquality().hash(price),
+      const DeepCollectionEquality().hash(isPriceUp));
 
   @JsonKey(ignore: true)
   @override
@@ -133,13 +249,26 @@ class _$_HomeState implements _HomeState {
 }
 
 abstract class _HomeState implements HomeState {
-  const factory _HomeState({final HomeStateStatus status, final String id}) =
-      _$_HomeState;
+  const factory _HomeState(
+      {final HomeStateStatus status,
+      final List<Market> markets,
+      final Market? selectedMarket,
+      final ActiveSymbol? selectedAsset,
+      final String? price,
+      final bool? isPriceUp}) = _$_HomeState;
 
   @override
   HomeStateStatus get status;
   @override
-  String get id;
+  List<Market> get markets;
+  @override
+  Market? get selectedMarket;
+  @override
+  ActiveSymbol? get selectedAsset;
+  @override
+  String? get price;
+  @override
+  bool? get isPriceUp;
   @override
   @JsonKey(ignore: true)
   _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>
