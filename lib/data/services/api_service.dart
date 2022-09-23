@@ -1,21 +1,16 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
-import 'package:price_tracker/data/api_config.dart';
-import 'package:price_tracker/data/api_service_interface.dart';
+import 'package:price_tracker/data/custom/api_config.dart';
 import 'package:price_tracker/data/custom/socket_stream.dart';
 import 'package:price_tracker/data/error_handling/exceptions.dart';
 import 'package:price_tracker/data/schema/active_symbols_schema.dart';
 import 'package:price_tracker/data/schema/symbol_price_schema.dart';
+import 'package:price_tracker/data/services/api_service_interface.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 typedef Json = Map<String, Object?>;
 
 class ApiService implements IApiService {
-  ApiService({required this.dio});
-
-  final Dio dio;
-
   @override
   Future<SocketStream<ActiveSymbolsSchema>> activeSymbols() async {
     const url = ApiConfig.baseUrl;

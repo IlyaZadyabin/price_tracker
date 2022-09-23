@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:price_tracker/data/schema/symbol_schema.dart';
+import 'package:price_tracker/data/data.dart';
 
 part 'active_symbol.freezed.dart';
 part 'active_symbol.g.dart';

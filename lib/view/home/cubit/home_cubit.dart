@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:price_tracker/data/custom/socket_stream.dart';
-import 'package:price_tracker/domain/market_repository_interface.dart';
-import 'package:price_tracker/domain/models/active_symbol.dart';
-import 'package:price_tracker/domain/models/market.dart';
+import 'package:price_tracker/data/data.dart';
+import 'package:price_tracker/domain/domain.dart';
 
 part 'home_cubit.freezed.dart';
 part 'home_state.dart';
