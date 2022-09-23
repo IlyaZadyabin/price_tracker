@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:price_tracker/data/custom/socket_stream.dart';
 import 'package:price_tracker/domain/market_repository_interface.dart';
 import 'package:price_tracker/domain/models/active_symbol.dart';
 import 'package:price_tracker/domain/models/market.dart';
@@ -17,6 +18,8 @@ class HomeCubit extends Cubit<HomeState> {
   final IMarketRepository marketRepository;
   StreamSubscription<List<Market>>? _marketsSubscription;
   StreamSubscription<double>? _priceSubscription;
+  SocketStream<double>? _priceStream;
+  SocketStream<List<Market>>? _marketStream;
 
   void _initialize() {
     marketRepository.marketWithAssets().then(
@@ -25,8 +28,15 @@ class HomeCubit extends Cubit<HomeState> {
               emit(state.copyWith(status: HomeStateStatus.error));
             },
             (data) {
-              _marketsSubscription =
-                  data.listen((data) => emit(state.copyWith(markets: data)));
+              _marketStream = data;
+              _marketsSubscription = data.stream.listen(
+                (data) => emit(
+                  state.copyWith(
+                    markets: data,
+                    status: HomeStateStatus.dataFetched,
+                  ),
+                ),
+              );
             },
           ),
         );
@@ -42,6 +52,8 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> selectAsset(ActiveSymbol? asset) async {
     if (asset != state.selectedAsset) {
       await _priceSubscription?.cancel();
+      _priceStream?.close();
+      _priceStream = null;
       if (asset != null) {
         emit(
           state.copyWith(
@@ -57,7 +69,8 @@ class HomeCubit extends Cubit<HomeState> {
                   emit(state.copyWith(status: HomeStateStatus.error));
                 },
                 (data) {
-                  _priceSubscription = data.listen((data) {
+                  _priceStream = data;
+                  _priceSubscription = data.stream.listen((data) {
                     emit(
                       state.copyWith(
                         price: data,
@@ -86,6 +99,8 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> close() {
     _marketsSubscription?.cancel();
     _priceSubscription?.cancel();
+    _priceStream?.close();
+    _marketStream?.close();
     return super.close();
   }
 }

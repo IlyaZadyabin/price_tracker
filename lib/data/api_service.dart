@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:price_tracker/data/api_config.dart';
 import 'package:price_tracker/data/api_service_interface.dart';
+import 'package:price_tracker/data/custom/socket_stream.dart';
 import 'package:price_tracker/data/error_handling/exceptions.dart';
 import 'package:price_tracker/data/schema/active_symbols_schema.dart';
 import 'package:price_tracker/data/schema/symbol_price_schema.dart';
@@ -16,7 +17,7 @@ class ApiService implements IApiService {
   final Dio dio;
 
   @override
-  Future<Stream<ActiveSymbolsSchema>> activeSymbols() async {
+  Future<SocketStream<ActiveSymbolsSchema>> activeSymbols() async {
     const url = ApiConfig.baseUrl;
 
     try {
@@ -40,7 +41,12 @@ class ApiService implements IApiService {
         {'"active_symbols"': '"full"', '"product_type"': '"basic"'}.toString(),
       );
 
-      return streamOfSymbols;
+      return SocketStream(
+        stream: streamOfSymbols,
+        close: () {
+          channel.sink.close();
+        },
+      );
     } catch (e) {
       if ((e is ServerException) || (e is DataParsingException)) {
         rethrow;
@@ -51,7 +57,7 @@ class ApiService implements IApiService {
   }
 
   @override
-  Future<Stream<SymbolPriceSchema>> priceOfSymbol(String symbol) async {
+  Future<SocketStream<SymbolPriceSchema>> priceOfSymbol(String symbol) async {
     const url = ApiConfig.baseUrl;
 
     try {
@@ -59,12 +65,16 @@ class ApiService implements IApiService {
         Uri.parse(url),
       );
 
+      String? subscriptionID;
+
       final Stream<SymbolPriceSchema> streamOfSymbols;
       try {
         streamOfSymbols = channel.stream.map((event) {
-          return SymbolPriceSchema.fromJson(
+          final schema = SymbolPriceSchema.fromJson(
             jsonDecode(event as String) as Json,
           );
+          subscriptionID ??= schema.subscription.id;
+          return schema;
         });
       } catch (e) {
         await channel.sink.close();
@@ -75,7 +85,15 @@ class ApiService implements IApiService {
         {'"ticks"': '"${symbol}"', '"subscribe"': 1}.toString(),
       );
 
-      return streamOfSymbols;
+      return SocketStream(
+        stream: streamOfSymbols,
+        close: () {
+          if (subscriptionID != null) {
+            channel.sink.add({'"forget"': '"${subscriptionID}"'}.toString());
+          }
+          channel.sink.close();
+        },
+      );
     } catch (e) {
       if ((e is ServerException) || (e is DataParsingException)) {
         rethrow;

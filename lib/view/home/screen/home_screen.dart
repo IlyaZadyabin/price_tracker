@@ -56,35 +56,37 @@ class _HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Price tracker')),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DropdownButton(
-              hint: const Text('Select a Market'),
-              value: state.selectedMarket,
-              items: dropdownMarkets,
-              onChanged: cubit.selectMarket,
-            ),
-            const SizedBox(height: 15),
-            DropdownButton(
-              hint: const Text('Select an Asset'),
-              value: state.selectedAsset,
-              items: dropdownAssets,
-              onChanged: cubit.selectAsset,
-            ),
-            const SizedBox(height: 15),
-            if (state.status == HomeStateStatus.priceLoading)
-              const CircularProgressIndicator()
-            else if (price != null)
-              Text(
-                price.toString(),
-                style: TextStyle(
-                  color: priceColor,
-                  fontSize: 30,
-                ),
+        child: (state.status.isInitialLoading)
+            ? const CircularProgressIndicator()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  DropdownButton(
+                    hint: const Text('Select a Market'),
+                    value: state.selectedMarket,
+                    items: dropdownMarkets,
+                    onChanged: cubit.selectMarket,
+                  ),
+                  const SizedBox(height: 15),
+                  DropdownButton(
+                    hint: const Text('Select an Asset'),
+                    value: state.selectedAsset,
+                    items: dropdownAssets,
+                    onChanged: cubit.selectAsset,
+                  ),
+                  const SizedBox(height: 15),
+                  if (state.status.isPriceLoading)
+                    const CircularProgressIndicator()
+                  else if (price != null)
+                    Text(
+                      price.toString(),
+                      style: TextStyle(
+                        color: priceColor,
+                        fontSize: 30,
+                      ),
+                    ),
+                ],
               ),
-          ],
-        ),
       ),
     );
   }
