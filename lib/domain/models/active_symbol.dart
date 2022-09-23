@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../../data/schema/symbol_schema.dart';
+import 'package:price_tracker/data/schema/symbol_schema.dart';
 
 part 'active_symbol.freezed.dart';
 part 'active_symbol.g.dart';
@@ -9,6 +8,7 @@ part 'active_symbol.g.dart';
 class ActiveSymbol with _$ActiveSymbol {
   const factory ActiveSymbol({
     @Default('') String name,
+    @Default('') String symbol,
     @Default('') String market,
     @Default(0.0) double price,
   }) = _ActiveSymbol;
@@ -18,6 +18,7 @@ class ActiveSymbol with _$ActiveSymbol {
 
   factory ActiveSymbol.fromSchema(SymbolSchema schema) {
     return ActiveSymbol(
+      symbol: schema.symbol,
       name: schema.displayName,
       market: schema.marketDisplayName,
       price: schema.spot,

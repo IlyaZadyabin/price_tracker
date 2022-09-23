@@ -20,8 +20,8 @@ mixin _$HomeState {
   List<Market> get markets => throw _privateConstructorUsedError;
   Market? get selectedMarket => throw _privateConstructorUsedError;
   ActiveSymbol? get selectedAsset => throw _privateConstructorUsedError;
-  String? get price => throw _privateConstructorUsedError;
-  bool? get isPriceUp => throw _privateConstructorUsedError;
+  double? get price => throw _privateConstructorUsedError;
+  double? get initialPrice => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeStateCopyWith<HomeState> get copyWith =>
@@ -37,8 +37,8 @@ abstract class $HomeStateCopyWith<$Res> {
       List<Market> markets,
       Market? selectedMarket,
       ActiveSymbol? selectedAsset,
-      String? price,
-      bool? isPriceUp});
+      double? price,
+      double? initialPrice});
 
   $MarketCopyWith<$Res>? get selectedMarket;
   $ActiveSymbolCopyWith<$Res>? get selectedAsset;
@@ -59,7 +59,7 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
     Object? selectedMarket = freezed,
     Object? selectedAsset = freezed,
     Object? price = freezed,
-    Object? isPriceUp = freezed,
+    Object? initialPrice = freezed,
   }) {
     return _then(_value.copyWith(
       status: status == freezed
@@ -81,11 +81,11 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
       price: price == freezed
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isPriceUp: isPriceUp == freezed
-          ? _value.isPriceUp
-          : isPriceUp // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as double?,
+      initialPrice: initialPrice == freezed
+          ? _value.initialPrice
+          : initialPrice // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 
@@ -123,8 +123,8 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
       List<Market> markets,
       Market? selectedMarket,
       ActiveSymbol? selectedAsset,
-      String? price,
-      bool? isPriceUp});
+      double? price,
+      double? initialPrice});
 
   @override
   $MarketCopyWith<$Res>? get selectedMarket;
@@ -149,7 +149,7 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
     Object? selectedMarket = freezed,
     Object? selectedAsset = freezed,
     Object? price = freezed,
-    Object? isPriceUp = freezed,
+    Object? initialPrice = freezed,
   }) {
     return _then(_$_HomeState(
       status: status == freezed
@@ -171,11 +171,11 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
       price: price == freezed
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isPriceUp: isPriceUp == freezed
-          ? _value.isPriceUp
-          : isPriceUp // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as double?,
+      initialPrice: initialPrice == freezed
+          ? _value.initialPrice
+          : initialPrice // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -189,7 +189,7 @@ class _$_HomeState implements _HomeState {
       this.selectedMarket,
       this.selectedAsset,
       this.price,
-      this.isPriceUp})
+      this.initialPrice})
       : _markets = markets;
 
   @override
@@ -208,13 +208,13 @@ class _$_HomeState implements _HomeState {
   @override
   final ActiveSymbol? selectedAsset;
   @override
-  final String? price;
+  final double? price;
   @override
-  final bool? isPriceUp;
+  final double? initialPrice;
 
   @override
   String toString() {
-    return 'HomeState(status: $status, markets: $markets, selectedMarket: $selectedMarket, selectedAsset: $selectedAsset, price: $price, isPriceUp: $isPriceUp)';
+    return 'HomeState(status: $status, markets: $markets, selectedMarket: $selectedMarket, selectedAsset: $selectedAsset, price: $price, initialPrice: $initialPrice)';
   }
 
   @override
@@ -229,7 +229,8 @@ class _$_HomeState implements _HomeState {
             const DeepCollectionEquality()
                 .equals(other.selectedAsset, selectedAsset) &&
             const DeepCollectionEquality().equals(other.price, price) &&
-            const DeepCollectionEquality().equals(other.isPriceUp, isPriceUp));
+            const DeepCollectionEquality()
+                .equals(other.initialPrice, initialPrice));
   }
 
   @override
@@ -240,7 +241,7 @@ class _$_HomeState implements _HomeState {
       const DeepCollectionEquality().hash(selectedMarket),
       const DeepCollectionEquality().hash(selectedAsset),
       const DeepCollectionEquality().hash(price),
-      const DeepCollectionEquality().hash(isPriceUp));
+      const DeepCollectionEquality().hash(initialPrice));
 
   @JsonKey(ignore: true)
   @override
@@ -254,8 +255,8 @@ abstract class _HomeState implements HomeState {
       final List<Market> markets,
       final Market? selectedMarket,
       final ActiveSymbol? selectedAsset,
-      final String? price,
-      final bool? isPriceUp}) = _$_HomeState;
+      final double? price,
+      final double? initialPrice}) = _$_HomeState;
 
   @override
   HomeStateStatus get status;
@@ -266,9 +267,9 @@ abstract class _HomeState implements HomeState {
   @override
   ActiveSymbol? get selectedAsset;
   @override
-  String? get price;
+  double? get price;
   @override
-  bool? get isPriceUp;
+  double? get initialPrice;
   @override
   @JsonKey(ignore: true)
   _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>

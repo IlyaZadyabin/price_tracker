@@ -3,8 +3,7 @@ import 'package:price_tracker/data/api_service_interface.dart';
 import 'package:price_tracker/data/error_handling/failure.dart';
 import 'package:price_tracker/domain/market_repository_interface.dart';
 import 'package:price_tracker/domain/models/active_symbol.dart';
-
-import 'models/market.dart';
+import 'package:price_tracker/domain/models/market.dart';
 
 class MarketRepository extends IMarketRepository {
   MarketRepository({required this.apiService});
@@ -41,6 +40,16 @@ class MarketRepository extends IMarketRepository {
           return markets;
         }),
       );
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Stream<double>>> priceOfSymbol(String symbol) async {
+    try {
+      final stream = await apiService.priceOfSymbol(symbol);
+      return Right(stream.map((data) => data.tick.quote));
     } catch (e) {
       return Left(Failure(message: e.toString()));
     }

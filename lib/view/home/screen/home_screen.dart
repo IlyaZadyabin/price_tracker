@@ -28,14 +28,30 @@ class _HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.watch<HomeCubit>();
-    final dropdownMarkets = cubit.state.markets
+    final state = cubit.state;
+
+    final dropdownMarkets = state.markets
         .map((e) => DropdownMenuItem<Market>(value: e, child: Text(e.name)))
         .toList();
-    final dropdownAssets = cubit.state.selectedMarket?.assets
+    final dropdownAssets = state.selectedMarket?.assets
         .map(
           (e) => DropdownMenuItem<ActiveSymbol>(value: e, child: Text(e.name)),
         )
         .toList();
+
+    Color priceColor = Colors.grey;
+    final price = state.price;
+    final initialPrice = state.initialPrice;
+
+    if (price != null && initialPrice != null) {
+      if (price > initialPrice) {
+        priceColor = Colors.green;
+      } else if (price < initialPrice) {
+        priceColor = Colors.red;
+      } else {
+        priceColor = Colors.grey;
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text('Price tracker')),
@@ -45,17 +61,28 @@ class _HomeScreen extends StatelessWidget {
           children: [
             DropdownButton(
               hint: const Text('Select a Market'),
-              value: cubit.state.selectedMarket,
+              value: state.selectedMarket,
               items: dropdownMarkets,
               onChanged: cubit.selectMarket,
             ),
             const SizedBox(height: 15),
             DropdownButton(
               hint: const Text('Select an Asset'),
-              value: cubit.state.selectedAsset,
+              value: state.selectedAsset,
               items: dropdownAssets,
               onChanged: cubit.selectAsset,
             ),
+            const SizedBox(height: 15),
+            if (state.status == HomeStateStatus.priceLoading)
+              const CircularProgressIndicator()
+            else if (price != null)
+              Text(
+                price.toString(),
+                style: TextStyle(
+                  color: priceColor,
+                  fontSize: 30,
+                ),
+              ),
           ],
         ),
       ),

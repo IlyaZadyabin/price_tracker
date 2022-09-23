@@ -7,6 +7,7 @@ part 'symbol_schema.g.dart';
 class SymbolSchema with _$SymbolSchema {
   const factory SymbolSchema({
     @JsonKey(name: 'display_name') required String displayName,
+    required String symbol,
     @JsonKey(name: 'market_display_name') required String marketDisplayName,
     required double spot,
   }) = _SymbolSchema;

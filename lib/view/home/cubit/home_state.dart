@@ -19,7 +19,7 @@ class HomeState with _$HomeState {
     @Default([]) List<Market> markets,
     Market? selectedMarket,
     ActiveSymbol? selectedAsset,
-    String? price,
-    bool? isPriceUp,
+    double? price,
+    double? initialPrice,
   }) = _HomeState;
 }
