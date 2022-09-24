@@ -16,21 +16,18 @@ class ApiService implements IApiService {
     const url = ApiConfig.baseUrl;
 
     try {
-      final channel = WebSocketChannel.connect(
-        Uri.parse(url),
-      );
+      final channel = WebSocketChannel.connect(Uri.parse(url));
 
-      final Stream<ActiveSymbolsSchema> streamOfSymbols;
-      try {
-        streamOfSymbols = channel.stream.map((event) {
+      final streamOfSymbols = channel.stream.map((event) {
+        try {
           return ActiveSymbolsSchema.fromJson(
             jsonDecode(event as String) as Json,
           );
-        });
-      } catch (e) {
-        await channel.sink.close();
-        throw DataParsingException();
-      }
+        } catch (e) {
+          channel.sink.close();
+          throw DataParsingException();
+        }
+      });
 
       channel.sink.add(
         {'"active_symbols"': '"full"', '"product_type"': '"basic"'}.toString(),
@@ -38,9 +35,7 @@ class ApiService implements IApiService {
 
       return SocketStream(
         stream: streamOfSymbols,
-        close: () {
-          channel.sink.close();
-        },
+        close: () => channel.sink.close(),
       );
     } catch (e) {
       if ((e is ServerException) || (e is DataParsingException)) {
@@ -56,25 +51,22 @@ class ApiService implements IApiService {
     const url = ApiConfig.baseUrl;
 
     try {
-      final channel = WebSocketChannel.connect(
-        Uri.parse(url),
-      );
+      final channel = WebSocketChannel.connect(Uri.parse(url));
 
       String? subscriptionID;
 
-      final Stream<SymbolPriceSchema> streamOfSymbols;
-      try {
-        streamOfSymbols = channel.stream.map((event) {
+      final streamOfSymbols = channel.stream.map((event) {
+        try {
           final schema = SymbolPriceSchema.fromJson(
             jsonDecode(event as String) as Json,
           );
           subscriptionID ??= schema.subscription.id;
           return schema;
-        });
-      } catch (e) {
-        await channel.sink.close();
-        throw DataParsingException();
-      }
+        } catch (e) {
+          channel.sink.close();
+          throw DataParsingException();
+        }
+      });
 
       channel.sink.add(
         {'"ticks"': '"${symbol}"', '"subscribe"': 1}.toString(),

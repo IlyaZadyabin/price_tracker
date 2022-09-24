@@ -68,15 +68,20 @@ class HomeCubit extends Cubit<HomeState> {
                 },
                 (data) {
                   _priceStream = data;
-                  _priceSubscription = data.stream.listen((data) {
-                    emit(
-                      state.copyWith(
-                        price: data,
-                        status: HomeStateStatus.dataFetched,
-                        initialPrice: state.initialPrice ?? data,
-                      ),
-                    );
-                  });
+                  _priceSubscription = data.stream.listen(
+                    (data) {
+                      emit(
+                        state.copyWith(
+                          price: data,
+                          status: HomeStateStatus.dataFetched,
+                          initialPrice: state.initialPrice ?? data,
+                        ),
+                      );
+                    },
+                    onError: (e) {
+                      emit(state.copyWith(status: HomeStateStatus.error));
+                    },
+                  );
                 },
               ),
             );

@@ -73,6 +73,11 @@ class _HomeScreen extends StatelessWidget {
                   const SizedBox(height: 15),
                   if (state.status.isPriceLoading)
                     const CircularProgressIndicator()
+                  else if (state.status.isError)
+                    const Text(
+                      'Error fetching price',
+                      style: TextStyle(fontSize: 15, color: Colors.red),
+                    )
                   else if (price != null)
                     Text(
                       price.toString(),
