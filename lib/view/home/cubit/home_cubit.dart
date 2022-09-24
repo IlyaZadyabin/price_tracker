@@ -19,6 +19,7 @@ class HomeCubit extends Cubit<HomeState> {
   SocketStream<double>? _priceStream;
   SocketStream<List<Market>>? _marketStream;
 
+  /// Connect to server and fetch markets and assets
   void _initialize() {
     marketRepository.marketWithAssets().then(
           (value) => value.fold(
@@ -40,6 +41,7 @@ class HomeCubit extends Cubit<HomeState> {
         );
   }
 
+  /// Pick specific market
   Future<void> selectMarket(Market? market) async {
     if (market != state.selectedMarket) {
       await selectAsset(null);
@@ -47,6 +49,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  /// Pick specific asset from selected market
   Future<void> selectAsset(ActiveSymbol? asset) async {
     if (asset != state.selectedAsset) {
       await _priceSubscription?.cancel();
@@ -63,24 +66,19 @@ class HomeCubit extends Cubit<HomeState> {
         );
         await marketRepository.priceOfSymbol(asset.symbol).then(
               (value) => value.fold(
-                (error) {
-                  emit(state.copyWith(status: HomeStateStatus.error));
-                },
+                (_) => emit(state.copyWith(status: HomeStateStatus.error)),
                 (data) {
                   _priceStream = data;
                   _priceSubscription = data.stream.listen(
-                    (data) {
-                      emit(
-                        state.copyWith(
-                          price: data,
-                          status: HomeStateStatus.dataFetched,
-                          initialPrice: state.initialPrice ?? data,
-                        ),
-                      );
-                    },
-                    onError: (e) {
-                      emit(state.copyWith(status: HomeStateStatus.error));
-                    },
+                    (data) => emit(
+                      state.copyWith(
+                        price: data,
+                        status: HomeStateStatus.dataFetched,
+                        initialPrice: state.initialPrice ?? data,
+                      ),
+                    ),
+                    onError: (_) =>
+                        emit(state.copyWith(status: HomeStateStatus.error)),
                   );
                 },
               ),

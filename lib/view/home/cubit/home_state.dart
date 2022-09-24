@@ -19,7 +19,9 @@ class HomeState with _$HomeState {
     @Default([]) List<Market> markets,
     Market? selectedMarket,
     ActiveSymbol? selectedAsset,
+    // selected asset price
     double? price,
+    // selected asset price when first fetched
     double? initialPrice,
   }) = _HomeState;
 }

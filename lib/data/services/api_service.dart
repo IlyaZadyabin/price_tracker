@@ -11,6 +11,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 typedef Json = Map<String, Object?>;
 
 class ApiService implements IApiService {
+  /// Socket connection for active symbols
   @override
   Future<SocketStream<ActiveSymbolsSchema>> activeSymbols() async {
     const url = ApiConfig.baseUrl;
@@ -46,6 +47,7 @@ class ApiService implements IApiService {
     }
   }
 
+  /// Socket connection for price of symbol
   @override
   Future<SocketStream<SymbolPriceSchema>> priceOfSymbol(String symbol) async {
     const url = ApiConfig.baseUrl;

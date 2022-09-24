@@ -9,6 +9,7 @@ class MarketRepository extends IMarketRepository {
 
   final IApiService apiService;
 
+  /// Setup socket stream for active symbols
   @override
   Future<Either<Failure, SocketStream<List<Market>>>> marketWithAssets() async {
     try {
@@ -50,6 +51,7 @@ class MarketRepository extends IMarketRepository {
     }
   }
 
+  /// Setup socket stream for price of symbol
   @override
   Future<Either<Failure, SocketStream<double>>> priceOfSymbol(
     String symbol,
